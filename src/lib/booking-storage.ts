@@ -1,0 +1,116 @@
+import type { PackageOption, ServiceKey } from "./divine-data";
+
+export type StoredInspirationFile = {
+  name: string;
+  size: number;
+  type: string;
+  status: "local" | "stored" | "failed";
+  storagePath?: string;
+  error?: string;
+};
+
+export type BookingDraft = {
+  service?: ServiceKey;
+  packageId?: string;
+  packageName?: string;
+  price?: string;
+  duration?: string;
+  deliverables?: string;
+  date?: string;
+  time?: string;
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  locationChoice?: "own" | "recommend";
+  locationDetails?: string;
+  inspirationNotes?: string;
+  inspirationFiles?: StoredInspirationFile[];
+  vision?: string;
+  relevantNotes?: string;
+  contactMethod?: "whatsapp" | "email";
+  requestSent?: boolean;
+};
+
+const storageKey = "divine-aesthetics-booking";
+
+export function readBookingDraft(): BookingDraft {
+  if (typeof window === "undefined") return {};
+  const raw = window.localStorage.getItem(storageKey);
+  if (!raw) return {};
+  try {
+    const parsed = JSON.parse(raw) as BookingDraft;
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+export function writeBookingDraft(next: BookingDraft) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(storageKey, JSON.stringify(next));
+}
+
+export function updateBookingDraft(partial: BookingDraft) {
+  const current = readBookingDraft();
+  const next = { ...current, ...partial };
+  writeBookingDraft(next);
+  return next;
+}
+
+export function startBookingFromPackage(pkg: PackageOption) {
+  return updateBookingDraft({
+    service: pkg.service,
+    packageId: pkg.id,
+    packageName: pkg.name,
+    price: pkg.price,
+    duration: pkg.duration,
+    deliverables: pkg.deliverables,
+    requestSent: false,
+  });
+}
+
+export function resetBookingDraft() {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(storageKey);
+}
+
+export function buildBookingMessage(draft: BookingDraft) {
+  const files = draft.inspirationFiles?.length
+    ? draft.inspirationFiles
+        .map((file) => {
+          const status = file.status === "stored" ? "stored" : file.status === "failed" ? "not stored" : "selected locally only";
+          return `- ${file.name} (${status})`;
+        })
+        .join("\n")
+    : "No files attached.";
+
+  return [
+    "Hello Divine Aesthetics,",
+    "",
+    "I'd like to book a session.",
+    "",
+    `Name: ${draft.fullName || "Not provided"}`,
+    `Service: ${draft.service || "Not selected"}`,
+    `Package: ${draft.packageName || "Not selected"}`,
+    `Price: ${draft.price || "Not provided"}`,
+    `Duration: ${draft.duration || "Not provided"}`,
+    `Deliverables: ${draft.deliverables || "Not provided"}`,
+    `Preferred date: ${draft.date || "Not selected"}`,
+    `Preferred time: ${draft.time || "Not selected"}`,
+    `Location: ${draft.locationChoice === "recommend" ? "I'd like Divine Aesthetics to recommend a location." : draft.locationDetails || "Not provided"}`,
+    "",
+    "Vision:",
+    draft.vision || "Not provided",
+    "",
+    "Inspiration:",
+    draft.inspirationNotes || "No notes provided.",
+    files,
+    "",
+    `Phone: ${draft.phone || "Not provided"}`,
+    `Email: ${draft.email || "Not provided"}`,
+    "",
+    "I understand this is a booking request and Divine Aesthetics will personally review and confirm it.",
+    "",
+    "I look forward to creating with Divine Aesthetics.",
+  ].join("\n");
+}
