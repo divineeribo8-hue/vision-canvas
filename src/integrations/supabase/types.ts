@@ -14,7 +14,75 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      booking_requests: {
+        Row: {
+          contact_method: string | null
+          created_at: string
+          deliverables: string
+          duration: string
+          email: string
+          full_name: string
+          id: string
+          inspiration_files: Json
+          inspiration_notes: string | null
+          location_choice: string
+          location_details: string | null
+          package_name: string
+          phone: string
+          preferred_date: string
+          preferred_time: string
+          price: string
+          relevant_notes: string | null
+          service: string
+          status: string
+          vision: string
+        }
+        Insert: {
+          contact_method?: string | null
+          created_at?: string
+          deliverables: string
+          duration: string
+          email: string
+          full_name: string
+          id?: string
+          inspiration_files?: Json
+          inspiration_notes?: string | null
+          location_choice: string
+          location_details?: string | null
+          package_name: string
+          phone: string
+          preferred_date: string
+          preferred_time: string
+          price: string
+          relevant_notes?: string | null
+          service: string
+          status?: string
+          vision: string
+        }
+        Update: {
+          contact_method?: string | null
+          created_at?: string
+          deliverables?: string
+          duration?: string
+          email?: string
+          full_name?: string
+          id?: string
+          inspiration_files?: Json
+          inspiration_notes?: string | null
+          location_choice?: string
+          location_details?: string | null
+          package_name?: string
+          phone?: string
+          preferred_date?: string
+          preferred_time?: string
+          price?: string
+          relevant_notes?: string | null
+          service?: string
+          status?: string
+          vision?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
