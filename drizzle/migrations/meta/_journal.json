@@ -15,6 +15,13 @@
       "when": 1790024839176,
       "tag": "0001_create_booking_requests",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790024908269,
+      "tag": "0002_portfolio_storage_policies",
+      "breakpoints": true
     }
   ]
 }
