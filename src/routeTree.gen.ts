@@ -10,33 +10,128 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BookingRouteImport } from './routes/booking'
+import { Route as BookingRequestReceivedRouteImport } from './routes/booking-request-received'
+import { Route as BookingReviewRouteImport } from './routes/booking-review'
+import { Route as ContactMethodRouteImport } from './routes/contact-method'
+import { Route as SessionDetailsRouteImport } from './routes/session-details'
+import { Route as SessionsRouteImport } from './routes/sessions'
+import { Route as TheWorkRouteImport } from './routes/the-work'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BookingRoute = BookingRouteImport.update({
+  id: '/booking',
+  path: '/booking',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingRequestReceivedRoute = BookingRequestReceivedRouteImport.update({
+  id: '/booking-request-received',
+  path: '/booking-request-received',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingReviewRoute = BookingReviewRouteImport.update({
+  id: '/booking-review',
+  path: '/booking-review',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactMethodRoute = ContactMethodRouteImport.update({
+  id: '/contact-method',
+  path: '/contact-method',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SessionDetailsRoute = SessionDetailsRouteImport.update({
+  id: '/session-details',
+  path: '/session-details',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SessionsRoute = SessionsRouteImport.update({
+  id: '/sessions',
+  path: '/sessions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TheWorkRoute = TheWorkRouteImport.update({
+  id: '/the-work',
+  path: '/the-work',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/booking': typeof BookingRoute
+  '/booking-request-received': typeof BookingRequestReceivedRoute
+  '/booking-review': typeof BookingReviewRoute
+  '/contact-method': typeof ContactMethodRoute
+  '/session-details': typeof SessionDetailsRoute
+  '/sessions': typeof SessionsRoute
+  '/the-work': typeof TheWorkRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/booking': typeof BookingRoute
+  '/booking-request-received': typeof BookingRequestReceivedRoute
+  '/booking-review': typeof BookingReviewRoute
+  '/contact-method': typeof ContactMethodRoute
+  '/session-details': typeof SessionDetailsRoute
+  '/sessions': typeof SessionsRoute
+  '/the-work': typeof TheWorkRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/booking': typeof BookingRoute
+  '/booking-request-received': typeof BookingRequestReceivedRoute
+  '/booking-review': typeof BookingReviewRoute
+  '/contact-method': typeof ContactMethodRoute
+  '/session-details': typeof SessionDetailsRoute
+  '/sessions': typeof SessionsRoute
+  '/the-work': typeof TheWorkRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/booking'
+    | '/booking-request-received'
+    | '/booking-review'
+    | '/contact-method'
+    | '/session-details'
+    | '/sessions'
+    | '/the-work'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/booking'
+    | '/booking-request-received'
+    | '/booking-review'
+    | '/contact-method'
+    | '/session-details'
+    | '/sessions'
+    | '/the-work'
+  id:
+    | '__root__'
+    | '/'
+    | '/booking'
+    | '/booking-request-received'
+    | '/booking-review'
+    | '/contact-method'
+    | '/session-details'
+    | '/sessions'
+    | '/the-work'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BookingRoute: typeof BookingRoute
+  BookingRequestReceivedRoute: typeof BookingRequestReceivedRoute
+  BookingReviewRoute: typeof BookingReviewRoute
+  ContactMethodRoute: typeof ContactMethodRoute
+  SessionDetailsRoute: typeof SessionDetailsRoute
+  SessionsRoute: typeof SessionsRoute
+  TheWorkRoute: typeof TheWorkRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +143,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/booking': {
+      id: '/booking'
+      path: '/booking'
+      fullPath: '/booking'
+      preLoaderRoute: typeof BookingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/booking-request-received': {
+      id: '/booking-request-received'
+      path: '/booking-request-received'
+      fullPath: '/booking-request-received'
+      preLoaderRoute: typeof BookingRequestReceivedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/booking-review': {
+      id: '/booking-review'
+      path: '/booking-review'
+      fullPath: '/booking-review'
+      preLoaderRoute: typeof BookingReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact-method': {
+      id: '/contact-method'
+      path: '/contact-method'
+      fullPath: '/contact-method'
+      preLoaderRoute: typeof ContactMethodRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/session-details': {
+      id: '/session-details'
+      path: '/session-details'
+      fullPath: '/session-details'
+      preLoaderRoute: typeof SessionDetailsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sessions': {
+      id: '/sessions'
+      path: '/sessions'
+      fullPath: '/sessions'
+      preLoaderRoute: typeof SessionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/the-work': {
+      id: '/the-work'
+      path: '/the-work'
+      fullPath: '/the-work'
+      preLoaderRoute: typeof TheWorkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BookingRoute: BookingRoute,
+  BookingRequestReceivedRoute: BookingRequestReceivedRoute,
+  BookingReviewRoute: BookingReviewRoute,
+  ContactMethodRoute: ContactMethodRoute,
+  SessionDetailsRoute: SessionDetailsRoute,
+  SessionsRoute: SessionsRoute,
+  TheWorkRoute: TheWorkRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
