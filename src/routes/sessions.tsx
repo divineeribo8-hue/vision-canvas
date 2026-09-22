@@ -30,7 +30,7 @@ function SessionsPage() {
     const selected = packages.find((item) => item.id === packageId);
     if (!selected) return;
     startBookingFromPackage(selected);
-    navigate({ to: "/session-details", search: { package: selected.id } });
+    navigate({ to: "/session-details" });
   };
 
   return (
