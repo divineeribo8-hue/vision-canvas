@@ -10,9 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as BookingRouteImport } from './routes/booking'
 import { Route as BookingRequestReceivedRouteImport } from './routes/booking-request-received'
 import { Route as BookingReviewRouteImport } from './routes/booking-review'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ContactMethodRouteImport } from './routes/contact-method'
 import { Route as SessionDetailsRouteImport } from './routes/session-details'
 import { Route as SessionsRouteImport } from './routes/sessions'
@@ -21,6 +23,11 @@ import { Route as TheWorkRouteImport } from './routes/the-work'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookingRoute = BookingRouteImport.update({
@@ -36,6 +43,11 @@ const BookingRequestReceivedRoute = BookingRequestReceivedRouteImport.update({
 const BookingReviewRoute = BookingReviewRouteImport.update({
   id: '/booking-review',
   path: '/booking-review',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactMethodRoute = ContactMethodRouteImport.update({
@@ -61,9 +73,11 @@ const TheWorkRoute = TheWorkRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/booking': typeof BookingRoute
   '/booking-request-received': typeof BookingRequestReceivedRoute
   '/booking-review': typeof BookingReviewRoute
+  '/contact': typeof ContactRoute
   '/contact-method': typeof ContactMethodRoute
   '/session-details': typeof SessionDetailsRoute
   '/sessions': typeof SessionsRoute
@@ -71,9 +85,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/booking': typeof BookingRoute
   '/booking-request-received': typeof BookingRequestReceivedRoute
   '/booking-review': typeof BookingReviewRoute
+  '/contact': typeof ContactRoute
   '/contact-method': typeof ContactMethodRoute
   '/session-details': typeof SessionDetailsRoute
   '/sessions': typeof SessionsRoute
@@ -82,9 +98,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/booking': typeof BookingRoute
   '/booking-request-received': typeof BookingRequestReceivedRoute
   '/booking-review': typeof BookingReviewRoute
+  '/contact': typeof ContactRoute
   '/contact-method': typeof ContactMethodRoute
   '/session-details': typeof SessionDetailsRoute
   '/sessions': typeof SessionsRoute
@@ -94,9 +112,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/booking'
     | '/booking-request-received'
     | '/booking-review'
+    | '/contact'
     | '/contact-method'
     | '/session-details'
     | '/sessions'
@@ -104,9 +124,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/booking'
     | '/booking-request-received'
     | '/booking-review'
+    | '/contact'
     | '/contact-method'
     | '/session-details'
     | '/sessions'
@@ -114,9 +136,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/booking'
     | '/booking-request-received'
     | '/booking-review'
+    | '/contact'
     | '/contact-method'
     | '/session-details'
     | '/sessions'
@@ -125,9 +149,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   BookingRoute: typeof BookingRoute
   BookingRequestReceivedRoute: typeof BookingRequestReceivedRoute
   BookingReviewRoute: typeof BookingReviewRoute
+  ContactRoute: typeof ContactRoute
   ContactMethodRoute: typeof ContactMethodRoute
   SessionDetailsRoute: typeof SessionDetailsRoute
   SessionsRoute: typeof SessionsRoute
@@ -141,6 +167,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/booking': {
@@ -162,6 +195,13 @@ declare module '@tanstack/react-router' {
       path: '/booking-review'
       fullPath: '/booking-review'
       preLoaderRoute: typeof BookingReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact-method': {
@@ -197,9 +237,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   BookingRoute: BookingRoute,
   BookingRequestReceivedRoute: BookingRequestReceivedRoute,
   BookingReviewRoute: BookingReviewRoute,
+  ContactRoute: ContactRoute,
   ContactMethodRoute: ContactMethodRoute,
   SessionDetailsRoute: SessionDetailsRoute,
   SessionsRoute: SessionsRoute,
