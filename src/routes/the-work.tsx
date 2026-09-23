@@ -1,11 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 
 import { PageShell } from "@/components/SiteChrome";
-import { VisualPlaceholder } from "@/components/VisualPlaceholder";
+import { PortfolioVisual } from "@/components/PortfolioVisual";
 import { Button } from "@/components/ui/button";
 import { portfolioItems, services } from "@/lib/divine-data";
+import { getPublishedPortfolio } from "@/lib/portfolio.functions";
+
+const portfolioQuery = queryOptions({ queryKey: ["published-portfolio"], queryFn: () => getPublishedPortfolio() });
 
 export const Route = createFileRoute("/the-work")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(portfolioQuery),
   head: () => ({ meta: [
     { title: "The Work — Divine Aesthetics Media Agency" },
     { name: "description", content: "Explore portraits, personal branding, products, concepts, cinematic events and videography." },
@@ -18,6 +23,7 @@ export const Route = createFileRoute("/the-work")({
 });
 
 function WorkPage() {
+  const { data: published } = useSuspenseQuery(portfolioQuery);
   return (
     <PageShell>
       <main>
@@ -44,10 +50,11 @@ function WorkPage() {
                 </div>
                 <div className="mt-12 grid auto-rows-[20rem] gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {items.map((item, index) => (
-                    <VisualPlaceholder
+                    <PortfolioVisual
                       key={item.id}
-                      label={item.title}
-                      type={item.type}
+                      item={published.filter((media) => media.section === service.key)[index]}
+                      placeholderLabel={item.title}
+                      placeholderType={item.type}
                       className={index === 0 ? "lg:col-span-2 lg:row-span-2" : ""}
                     />
                   ))}
