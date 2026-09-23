@@ -164,6 +164,10 @@
   .field { width: 100%; border: 1px solid var(--color-input); border-radius: var(--radius); background: transparent; padding: .85rem 1rem; color: var(--color-foreground); outline: none; }
   .field:focus { border-color: var(--color-primary); box-shadow: 0 0 0 1px var(--color-primary); }
   .hero-texture { background: radial-gradient(circle at 70% 25%, color-mix(in oklch, var(--color-accent) 32%, transparent), transparent 34%), linear-gradient(120deg, var(--color-primary), color-mix(in oklch, var(--color-primary) 78%, var(--color-foreground))); }
+  .placeholder-texture { background: linear-gradient(145deg, color-mix(in oklch, var(--color-muted) 82%, var(--color-primary)), var(--color-secondary)); }
+  .footer-label { font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .16em; }
+  .footer-link { width: fit-content; font-size: .78rem; color: var(--color-muted-foreground); transition: color .2s ease; }
+  .footer-link:hover { color: var(--color-foreground); }
 }
 
 @media (min-width: 768px) {
