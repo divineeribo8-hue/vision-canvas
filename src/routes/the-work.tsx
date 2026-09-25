@@ -32,7 +32,7 @@ function WorkPage() {
           <h1 className="page-title">EXPERIENCE THE ART OF VISUAL STORYTELLING.</h1>
           <p className="mt-8 max-w-2xl body-large">A growing archive of personality, identity, atmosphere and imagination—created with intention.</p>
           <div className="mt-9 border-l border-primary pl-5 text-sm leading-7 text-muted-foreground">
-            Development note: every frame below is a replaceable placeholder. No placeholder is presented as completed Divine Aesthetics work.
+            Frames marked as placeholders are reserved for upcoming work and are not presented as completed Divine Aesthetics work.
           </div>
         </header>
 
