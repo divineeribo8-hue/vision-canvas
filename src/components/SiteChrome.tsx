@@ -88,10 +88,10 @@ export function Footer() {
               <a className="footer-link" href="https://instagram.com" target="_blank" rel="noreferrer">
                 Instagram
               </a>
-              <a className="footer-link" href="mailto:hello@divineaesthetics.media">
+              <a className="footer-link" href="mailto:divineeribo8@gmail.com">
                 Email
               </a>
-              <a className="footer-link" href="https://wa.me/2340000000000" target="_blank" rel="noreferrer">
+              <a className="footer-link" href="https://wa.me/2348162011902" target="_blank" rel="noreferrer">
                 WhatsApp
               </a>
             </div>

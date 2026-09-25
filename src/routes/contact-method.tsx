@@ -35,7 +35,7 @@ function ContactMethodPage() {
       await submitRequest({ data: { service: draft.service, packageName: draft.packageName, price: draft.price, duration: draft.duration, deliverables: draft.deliverables, preferredDate: draft.date, preferredTime: draft.time, fullName: draft.fullName, email: draft.email, phone: draft.phone, locationChoice: draft.locationChoice, locationDetails: draft.locationDetails, inspirationNotes: draft.inspirationNotes, inspirationFiles: draft.inspirationFiles ?? [], vision: draft.vision, relevantNotes: draft.relevantNotes, contactMethod: method } });
       updateBookingDraft({ contactMethod: method, requestSent: true });
       const subject = `Divine Aesthetics Session Inquiry — ${draft.service}`;
-      const url = method === "whatsapp" ? `https://wa.me/?text=${encodeURIComponent(message)}` : `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
+      const url = method === "whatsapp" ? `https://wa.me/2348162011902?text=${encodeURIComponent(message)}` : `mailto:divineeribo8@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
       window.location.href = url;
     } catch (caught) { setError(caught instanceof Error ? caught.message : "The request could not be prepared."); }
     finally { setSending(null); }
@@ -44,10 +44,10 @@ function ContactMethodPage() {
   return <PageShell><main className="page-intro">
     <p className="eyebrow">FINAL STEP</p><h1 className="page-title">HOW WOULD YOU LIKE TO CONNECT?</h1><p className="mt-8 max-w-2xl body-large">Your complete booking request is already prepared. Choose a method, review the message in your app and press send.</p>
     <div className="mt-10 grid gap-px bg-border md:grid-cols-2">
-      <button type="button" onClick={() => open("whatsapp")} disabled={!!sending} className="group min-h-72 bg-secondary p-8 text-left transition-colors hover:bg-accent disabled:opacity-60"><MessageCircle className="size-8 text-primary" /><h2 className="mt-8 font-serif text-4xl">SEND VIA WHATSAPP</h2><p className="mt-4 text-sm leading-7 text-muted-foreground">Opens WhatsApp with every booking detail filled in. Select Divine Aesthetics as the recipient, review, then send.</p></button>
+      <button type="button" onClick={() => open("whatsapp")} disabled={!!sending} className="group min-h-72 bg-secondary p-8 text-left transition-colors hover:bg-accent disabled:opacity-60"><MessageCircle className="size-8 text-primary" /><h2 className="mt-8 font-serif text-4xl">SEND VIA WHATSAPP</h2><p className="mt-4 text-sm leading-7 text-muted-foreground">Opens WhatsApp with every booking detail filled in. Review, then press send.</p></button>
       <button type="button" onClick={() => open("email")} disabled={!!sending} className="group min-h-72 bg-secondary p-8 text-left transition-colors hover:bg-accent disabled:opacity-60"><Mail className="size-8 text-primary" /><h2 className="mt-8 font-serif text-4xl">SEND VIA GMAIL</h2><p className="mt-4 text-sm leading-7 text-muted-foreground">Opens your email with the subject and complete request filled in, including secure links to your inspiration. Review, then send.</p></button>
     </div>
-    <div className="mt-8 border border-border bg-secondary p-5 text-sm leading-7 text-muted-foreground"><strong className="text-foreground">Contact details needed:</strong> the agency’s final WhatsApp number and email address have not been provided, so the appropriate app opens without a fixed recipient. No client information needs to be retyped.</div>
+    <div className="mt-8 border border-border bg-secondary p-5 text-sm leading-7 text-muted-foreground">Your message goes directly to Divine Aesthetics on WhatsApp (+234 816 201 1902) or Gmail (divineeribo8@gmail.com). No information needs to be retyped.</div>
     {error && <p role="alert" className="mt-5 text-sm text-destructive">{error}</p>}
     <div className="mt-8 flex flex-wrap gap-4"><Button asChild variant="text"><Link to="/booking-review">BACK TO REVIEW</Link></Button>{draft.requestSent && <Button asChild variant="outlineEditorial"><Link to="/booking-request-received">I HAVE SENT MY MESSAGE</Link></Button>}</div>
   </main></PageShell>;
