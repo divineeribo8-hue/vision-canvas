@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Mail, MessageCircle } from "lucide-react";
+import { Copy, Mail, MessageCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { PageShell } from "@/components/SiteChrome";
