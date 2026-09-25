@@ -2,6 +2,11 @@ import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 
 import type { Database } from "@/integrations/supabase/types";
+import portraitRedDress from "@/assets/portrait-red-dress.jpg.asset.json";
+
+const featuredWork: PublishedPortfolioItem[] = [
+  { id: "featured-portrait-red-dress", section: "portraits", title: "Portrait in Natural Light", mediaType: "image", orientation: "portrait", mediaUrl: portraitRedDress.url },
+];
 
 export type PublishedPortfolioItem = {
   id: string;
@@ -15,7 +20,7 @@ export type PublishedPortfolioItem = {
 export const getPublishedPortfolio = createServerFn({ method: "GET" }).handler(async () => {
   const url = process.env["SUPABASE_URL"];
   const key = process.env["SUPABASE_PUBLISHABLE_KEY"];
-  if (!url || !key) return [] satisfies PublishedPortfolioItem[];
+  if (!url || !key) return featuredWork;
 
   const publicClient = createClient<Database>(url, key, {
     auth: { persistSession: false },
@@ -27,7 +32,7 @@ export const getPublishedPortfolio = createServerFn({ method: "GET" }).handler(a
     } },
   });
   const { data, error } = await publicClient.from("portfolio_items").select("id, section, title, media_type, orientation, media_path").eq("published", true).order("sort_order");
-  if (error || !data?.length) return [] satisfies PublishedPortfolioItem[];
+  if (error || !data?.length) return featuredWork;
 
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const signed = await Promise.all(data.map(async (item) => {
@@ -35,5 +40,5 @@ export const getPublishedPortfolio = createServerFn({ method: "GET" }).handler(a
     if (!signedData?.signedUrl) return null;
     return { id: item.id, section: item.section, title: item.title, mediaType: item.media_type as "image" | "video", orientation: item.orientation as "portrait" | "landscape" | "square", mediaUrl: signedData.signedUrl } satisfies PublishedPortfolioItem;
   }));
-  return signed.filter((item): item is PublishedPortfolioItem => item !== null);
+  return [...featuredWork, ...signed.filter((item): item is PublishedPortfolioItem => item !== null)];
 });

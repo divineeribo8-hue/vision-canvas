@@ -11,6 +11,7 @@ const fileSchema = z.object({
   status: z.enum(["local", "stored", "failed"]),
   storagePath: z.string().trim().max(500).optional(),
   error: z.string().trim().max(300).optional(),
+  shareUrl: z.string().url().max(2000).optional(),
 });
 
 const bookingSchema = z.object({
@@ -83,4 +84,13 @@ export const submitBookingRequest = createServerFn({ method: "POST" })
     }
 
     return { ok: true };
+  });
+
+export const getInspirationLink = createServerFn({ method: "POST" })
+  .inputValidator((input) => z.object({ path: z.string().regex(/^requests\/[0-9a-f-]{36}\/[a-zA-Z0-9._-]{1,200}$/) }).parse(input))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: signed, error } = await supabaseAdmin.storage.from("booking-inspiration").createSignedUrl(data.path, 60 * 60 * 24 * 30);
+    if (error || !signed?.signedUrl) throw new Error("Secure link could not be created");
+    return { url: signed.signedUrl };
   });

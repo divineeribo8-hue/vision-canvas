@@ -7,6 +7,7 @@ export type StoredInspirationFile = {
   status: "local" | "stored" | "failed";
   storagePath?: string;
   error?: string;
+  shareUrl?: string;
 };
 
 export type BookingDraft = {
@@ -78,7 +79,8 @@ export function buildBookingMessage(draft: BookingDraft) {
   const files = draft.inspirationFiles?.length
     ? draft.inspirationFiles
         .map((file) => {
-          const status = file.status === "stored" ? "stored" : file.status === "failed" ? "not stored" : "selected locally only";
+          if (file.status === "stored" && file.shareUrl) return `- ${file.name}: ${file.shareUrl}`;
+          const status = file.status === "stored" ? "stored" : file.status === "failed" ? "not uploaded" : "selected locally only, not uploaded";
           return `- ${file.name} (${status})`;
         })
         .join("\n")
@@ -102,14 +104,14 @@ export function buildBookingMessage(draft: BookingDraft) {
     "Vision:",
     draft.vision || "Not provided",
     "",
-    "Inspiration:",
+    "Inspiration (secure links, valid 30 days):",
     draft.inspirationNotes || "No notes provided.",
     files,
     "",
     `Phone: ${draft.phone || "Not provided"}`,
     `Email: ${draft.email || "Not provided"}`,
     "",
-    "I understand this is a booking request and Divine Aesthetics will personally review and confirm it.",
+    "I understand a 50% deposit is required to secure this session, and it is not confirmed until the deposit is received and Divine Aesthetics confirms it.",
     "",
     "I look forward to creating with Divine Aesthetics.",
   ].join("\n");
