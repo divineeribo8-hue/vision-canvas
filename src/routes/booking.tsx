@@ -5,6 +5,8 @@ import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { PageShell } from "@/components/SiteChrome";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { getInspirationLink } from "@/lib/booking.functions";
 import { readBookingDraft, updateBookingDraft, type BookingDraft, type StoredInspirationFile } from "@/lib/booking-storage";
 import { findPackage, packages, serviceLabels } from "@/lib/divine-data";
 
@@ -25,6 +27,7 @@ function BookingPage() {
   const [draft, setDraft] = useState<BookingDraft>({ inspirationFiles: [] });
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const signLink = useServerFn(getInspirationLink);
   useEffect(() => setDraft(readBookingDraft()), []);
 
   const patch = (partial: BookingDraft) => {
@@ -51,9 +54,10 @@ function BookingPage() {
       const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "-");
       const path = `requests/${crypto.randomUUID()}/${safeName}`;
       const { error: uploadError } = await supabase.storage.from("booking-inspiration").upload(path, file, { upsert: false });
-      completed.push(uploadError
-        ? { name: file.name, size: file.size, type: file.type, status: "failed", error: uploadError.message }
-        : { name: file.name, size: file.size, type: file.type, status: "stored", storagePath: path });
+      if (uploadError) { completed.push({ name: file.name, size: file.size, type: file.type, status: "failed", error: uploadError.message }); continue; }
+      let shareUrl: string | undefined;
+      try { shareUrl = (await signLink({ data: { path } })).url; } catch { shareUrl = undefined; }
+      completed.push({ name: file.name, size: file.size, type: file.type, status: "stored", storagePath: path, ...(shareUrl ? { shareUrl } : {}) });
     }
     patch({ inspirationFiles: completed });
     setUploading(false);
