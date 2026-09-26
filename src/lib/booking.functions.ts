@@ -29,7 +29,7 @@ const bookingSchema = z.object({
   locationDetails: z.string().trim().max(500).optional(),
   inspirationNotes: z.string().trim().max(1000).optional(),
   inspirationFiles: z.array(fileSchema).max(8),
-  vision: z.string().trim().min(10).max(2500),
+  vision: z.string().trim().min(1).max(2500),
   relevantNotes: z.string().trim().max(1000).optional(),
   contactMethod: z.enum(["whatsapp", "email"]).optional(),
 });
