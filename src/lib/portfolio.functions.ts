@@ -3,10 +3,17 @@ import { createClient } from "@supabase/supabase-js";
 
 import type { Database } from "@/integrations/supabase/types";
 import portraitRedDress from "@/assets/portrait-red-dress.jpg.asset.json";
+import portraitChocolateDress from "@/assets/portrait-chocolate-dress.jpg.asset.json";
+import portraitWhiteBlooms from "@/assets/portrait-white-blooms.webp.asset.json";
+import portraitGardenRed from "@/assets/portrait-garden-red.webp.asset.json";
 
 const featuredWork: PublishedPortfolioItem[] = [
   { id: "featured-portrait-red-dress", section: "portraits", title: "Portrait in Natural Light", mediaType: "image", orientation: "portrait", mediaUrl: portraitRedDress.url },
+  { id: "featured-portrait-chocolate-dress", section: "portraits", title: "Studio Elegance", mediaType: "image", orientation: "portrait", mediaUrl: portraitChocolateDress.url },
+  { id: "featured-portrait-white-blooms", section: "portraits", title: "Between the Blooms", mediaType: "image", orientation: "portrait", mediaUrl: portraitWhiteBlooms.url },
+  { id: "featured-portrait-garden-red", section: "portraits", title: "Red in the Garden", mediaType: "image", orientation: "portrait", mediaUrl: portraitGardenRed.url },
 ];
+
 
 export type PublishedPortfolioItem = {
   id: string;
