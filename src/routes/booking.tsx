@@ -31,8 +31,7 @@ function BookingPage() {
   useEffect(() => setDraft(readBookingDraft()), []);
 
   const patch = (partial: BookingDraft) => {
-    const next = { ...draft, ...partial };
-    setDraft(next);
+    setDraft((current) => ({ ...current, ...partial }));
     updateBookingDraft(partial);
   };
   const selected = findPackage(draft.packageId);
@@ -66,10 +65,23 @@ function BookingPage() {
   const submit = (event: FormEvent) => {
     event.preventDefault();
     setError("");
-    if (!draft.packageId || !draft.date || !draft.time || !draft.fullName || !draft.email || !draft.phone || !draft.locationChoice || !draft.vision || draft.vision.trim().length < 10) {
-      setError("Please complete the package, date, time, contact, location and vision fields.");
+    const filled = (value?: string) => !!value && value.trim().length > 0;
+    const missing = [
+      !draft.packageId && "session package",
+      !filled(draft.date) && "preferred date",
+      !filled(draft.time) && "preferred time",
+      !filled(draft.fullName) && "full name",
+      !filled(draft.email) && "email",
+      !filled(draft.phone) && "phone / WhatsApp",
+      !draft.locationChoice && "location choice",
+      draft.locationChoice === "own" && !filled(draft.locationDetails) && "location details",
+      !filled(draft.vision) && "creative vision",
+    ].filter(Boolean);
+    if (missing.length) {
+      setError(`Please complete: ${missing.join(", ")}.`);
       return;
     }
+    if (uploading) { setError("Please wait for your inspiration files to finish uploading."); return; }
     updateBookingDraft(draft);
     navigate({ to: "/booking-review" });
   };
