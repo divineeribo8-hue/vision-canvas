@@ -4,12 +4,12 @@ import { ArrowRight } from "lucide-react";
 import { PageShell } from "@/components/SiteChrome";
 import { Button } from "@/components/ui/button";
 import { startBookingFromPackage } from "@/lib/booking-storage";
-import { futurePricingServices, getPackagesForService, packages } from "@/lib/divine-data";
+import { getPackagesForService, packages, motionDescription, motionConditions } from "@/lib/divine-data";
 
 export const Route = createFileRoute("/sessions")({
   head: () => ({ meta: [
     { title: "Sessions & Pricing — Divine Aesthetics" },
-    { name: "description", content: "Choose a portrait, editorial or videography experience with clear pricing and deliverables." },
+    { name: "description", content: "Explore Smartphone Portrait Photography and Basic Motion Video Editing with clear prices and deliverables." },
     { property: "og:title", content: "Sessions & Pricing — Divine Aesthetics" },
     { property: "og:description", content: "Every session begins with an idea. Choose the experience built around yours." },
     { property: "og:type", content: "website" },
@@ -21,9 +21,8 @@ export const Route = createFileRoute("/sessions")({
 function SessionsPage() {
   const navigate = useNavigate();
   const groups = [
-    { title: "PORTRAIT PHOTOGRAPHY", items: getPackagesForService("portraits"), note: "Additional edited image: ₦3,000" },
-    { title: "EDITORIAL", items: getPackagesForService("creative-concepts"), note: "Additional edited image: ₦3,000" },
-    { title: "VIDEOGRAPHY & VIDEO EDITING", items: getPackagesForService("videography"), note: "Filming scope is discussed where needed." },
+    { title: "SMARTPHONE PORTRAIT PHOTOGRAPHY", items: getPackagesForService("portraits"), note: "Additional edited image: ₦3,000" },
+    { title: "BASIC MOTION VIDEO EDITING", items: getPackagesForService("videography"), note: "STARTING FROM ₦20,000" },
   ];
 
   const choose = (packageId: string) => {
@@ -46,9 +45,10 @@ function SessionsPage() {
           <section key={group.title} className={index % 2 ? "border-y border-border bg-secondary" : ""}>
             <div className="section-shell">
               <div className="flex flex-col gap-3 border-b border-border pb-7 md:flex-row md:items-end md:justify-between">
-                <h2 className="font-serif text-4xl md:text-5xl">{group.title}</h2>
+                <h2 className="font-serif text-3xl md:text-4xl">{group.title}</h2>
                 <p className="text-sm text-muted-foreground">{group.note}</p>
               </div>
+              {index === 1 && <div className="py-8"><p className="body-large max-w-3xl">{motionDescription}</p><p className="mt-5 max-w-3xl text-sm leading-7 text-muted-foreground">{motionConditions}</p></div>}
               <div className="grid gap-px bg-border md:grid-cols-2 lg:grid-cols-4">
                 {group.items.map((pkg) => (
                   <article key={pkg.id} className="flex min-h-[25rem] flex-col bg-background p-7">
@@ -68,18 +68,6 @@ function SessionsPage() {
           </section>
         ))}
 
-        <section className="section-shell">
-          <p className="eyebrow">FUTURE PRICING</p>
-          <h2 className="mt-5 display-heading">More experiences, shaped individually.</h2>
-          <div className="mt-10 grid gap-px bg-border md:grid-cols-3">
-            {futurePricingServices.map((service) => (
-              <article key={service} className="bg-secondary p-8">
-                <h3 className="font-serif text-3xl">{service}</h3>
-                <p className="mt-5 text-sm leading-7 text-muted-foreground">Pricing to be added. Please enquire for a considered custom quote.</p>
-              </article>
-            ))}
-          </div>
-        </section>
       </main>
     </PageShell>
   );
