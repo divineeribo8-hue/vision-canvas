@@ -8,4 +8,8 @@
 - [x] Distinguish locally selected inspiration from successfully stored files.
 - [x] Generate WhatsApp and email messages automatically from the client’s booking details.
 - [x] Clearly distinguish booking request sent from booking confirmed.
-- [ ] Replace placeholder WhatsApp, email, and Instagram details with the agency’s real contact information.
+- [x] Set the supplied WhatsApp and Gmail contact details.
+- [ ] Rename portraits without changing packages and replace video pricing; show only two services.
+- [ ] Expand the mixed-aspect portfolio, clear image viewing, and simple secure media maintenance.
+- [ ] Keep optional inspiration and service-appropriate inquiry fields; verify review, copy and send options.
+- [ ] Verify the website and apply the required package security update.
