@@ -29,6 +29,13 @@
       "when": 1790132273115,
       "tag": "0003_create_portfolio_items",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792055387592,
+      "tag": "0004_secure_portfolio_owner",
+      "breakpoints": true
     }
   ]
 }

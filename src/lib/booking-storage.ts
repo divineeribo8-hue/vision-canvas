@@ -1,4 +1,4 @@
-import type { PackageOption, ServiceKey } from "./divine-data";
+import { findPackage, serviceLabels, type PackageOption, type ServiceKey } from "./divine-data";
 
 export type StoredInspirationFile = {
   name: string;
@@ -40,7 +40,10 @@ export function readBookingDraft(): BookingDraft {
   if (!raw) return {};
   try {
     const parsed = JSON.parse(raw) as BookingDraft;
-    return parsed && typeof parsed === "object" ? parsed : {};
+    if (!parsed || typeof parsed !== "object") return {};
+    const selected = findPackage(parsed.packageId);
+    if (!selected) return { ...parsed, service: undefined, packageId: undefined, packageName: undefined, price: undefined, duration: undefined, deliverables: undefined };
+    return { ...parsed, service: selected.service, packageName: selected.name, price: selected.price, duration: selected.duration, deliverables: selected.deliverables };
   } catch {
     return {};
   }
@@ -92,17 +95,20 @@ export function buildBookingMessage(draft: BookingDraft) {
     "I'd like to book a session.",
     "",
     `Name: ${draft.fullName || "Not provided"}`,
-    `Service: ${draft.service || "Not selected"}`,
+    `Service: ${draft.service ? serviceLabels[draft.service] : "Not selected"}`,
     `Package: ${draft.packageName || "Not selected"}`,
     `Price: ${draft.price || "Not provided"}`,
     `Duration: ${draft.duration || "Not provided"}`,
     `Deliverables: ${draft.deliverables || "Not provided"}`,
-    `Preferred date: ${draft.date || "Not selected"}`,
-    `Preferred time: ${draft.time || "Not selected"}`,
-    `Location: ${draft.locationChoice === "recommend" ? "I'd like Divine Aesthetics to recommend a location." : draft.locationDetails || "Not provided"}`,
+    `Preferred date: ${draft.service === "videography" ? "Not applicable (editing project)" : draft.date || "Not selected"}`,
+    `Preferred time: ${draft.service === "videography" ? "Not applicable (editing project)" : draft.time || "Not selected"}`,
+    `Location: ${draft.service === "videography" ? "Not applicable (editing project)" : draft.locationChoice === "recommend" ? "I'd like Divine Aesthetics to recommend a location." : draft.locationDetails || "Not provided"}`,
     "",
     "Vision:",
     draft.vision || "Not provided",
+    "",
+    "Additional notes:",
+    draft.relevantNotes || "None",
     "",
     "Inspiration (secure links, valid 30 days):",
     draft.inspirationNotes || "No notes provided.",

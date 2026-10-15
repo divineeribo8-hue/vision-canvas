@@ -1,10 +1,4 @@
-export type ServiceKey =
-  | "portraits"
-  | "personal-branding"
-  | "product-photography"
-  | "creative-concepts"
-  | "events-captured-cinematically"
-  | "videography";
+export type ServiceKey = "portraits" | "videography";
 
 export type PackageOption = {
   id: string;
@@ -26,57 +20,21 @@ export type PortfolioItem = {
 };
 
 export const serviceLabels: Record<ServiceKey, string> = {
-  portraits: "Portraits",
-  "personal-branding": "Personal Branding",
-  "product-photography": "Product Photography",
-  "creative-concepts": "Creative Concepts",
-  "events-captured-cinematically": "Events Captured Cinematically",
-  videography: "Videography",
+  portraits: "Smartphone Portrait Photography",
+  videography: "Basic Motion Video Editing",
 };
 
+export const motionDescription = "Professional basic motion video editing for clear, engaging visual communication. Depending on the project requirements, editing may include animated typography, basic motion graphics, transitions, sound effects, audio synchronisation, and final video export.";
+export const motionConditions = "The listed prices apply to basic motion video editing. Advanced animation, complex visual effects, extensive editing requirements, or additional deliverables may require a custom quote. The exact editing scope and deliverables are agreed after reviewing your brief, before work begins.";
 export const services = [
-  {
-    key: "portraits" as const,
-    title: "PORTRAITS",
-    description: "Visual representation of personality, presence and individuality.",
-  },
-  {
-    key: "personal-branding" as const,
-    title: "PERSONAL BRANDING",
-    description: "Visuals that communicate identity, profession and personal story.",
-  },
-  {
-    key: "product-photography" as const,
-    title: "PRODUCT PHOTOGRAPHY",
-    description: "Intentional imagery designed to communicate products clearly and beautifully.",
-  },
-  {
-    key: "creative-concepts" as const,
-    title: "CREATIVE CONCEPTS",
-    description: "Visual storytelling built around imagination, concepts and unique ideas.",
-  },
-  {
-    key: "events-captured-cinematically" as const,
-    title: "EVENTS CAPTURED CINEMATICALLY",
-    description: "Authentic documentation of atmosphere, emotion and meaningful moments.",
-  },
-  {
-    key: "videography" as const,
-    title: "VIDEOGRAPHY",
-    description: "Moving images that extend stories beyond a single frame.",
-  },
+  { key: "portraits" as const, title: "SMARTPHONE PORTRAIT PHOTOGRAPHY", description: "Intentional smartphone portraits that reflect personality, presence and individuality." },
+  { key: "videography" as const, title: "BASIC MOTION VIDEO EDITING", description: motionDescription },
 ];
 
 const portraitIncludes = [
   "Creative direction before the session",
   "Guided posing and expression support",
   "Private review and careful image refinement",
-];
-
-const editorialIncludes = [
-  "Concept planning and visual direction",
-  "Editorial-style shooting approach",
-  "Careful final image selection and refinement",
 ];
 
 export const packages: PackageOption[] = [
@@ -120,106 +78,23 @@ export const packages: PackageOption[] = [
     included: portraitIncludes,
     preparation: "Bring multiple looks, visual references and enough time to explore a fuller story.",
   },
-  {
-    id: "editorial-essential",
-    service: "creative-concepts",
-    name: "Editorial Essential",
-    price: "₦20,000",
-    duration: "Editorial session",
-    deliverables: "3 edited images",
-    included: editorialIncludes,
-    preparation: "Share your concept, mood and styling direction before the session.",
-  },
-  {
-    id: "editorial-standard",
-    service: "creative-concepts",
-    name: "Editorial Standard",
-    price: "₦30,000",
-    duration: "Editorial session",
-    deliverables: "5 edited images",
-    included: editorialIncludes,
-    preparation: "Bring references, styling notes and a clear idea of the story or feeling.",
-  },
-  {
-    id: "editorial-plus",
-    service: "creative-concepts",
-    name: "Editorial Plus",
-    price: "₦35,000",
-    duration: "Editorial session",
-    deliverables: "7 edited images",
-    included: editorialIncludes,
-    preparation: "Prepare a detailed creative brief with wardrobe, setting and mood references.",
-  },
-  {
-    id: "editorial-premium",
-    service: "creative-concepts",
-    name: "Editorial Premium",
-    price: "₦45,000",
-    duration: "Editorial session",
-    deliverables: "10 edited images",
-    included: editorialIncludes,
-    preparation: "Ideal for fuller concepts with multiple visual directions and refined storytelling.",
-  },
-  {
-    id: "video-45-60",
-    service: "videography",
-    name: "45–60 Seconds",
-    price: "₦10,000",
-    duration: "45–60 seconds final video",
-    deliverables: "1 edited video",
-    included: ["Video edit", "Pacing and story structure", "Export ready for sharing"],
-    preparation: "Share the purpose, reference style and where the video will be used.",
-  },
-  {
-    id: "video-61-100",
-    service: "videography",
-    name: "61–100 Seconds",
-    price: "₦15,000",
-    duration: "61–100 seconds final video",
-    deliverables: "1 edited video",
-    included: ["Video edit", "Pacing and story structure", "Export ready for sharing"],
-    preparation: "Share the purpose, reference style and where the video will be used.",
-  },
-  {
-    id: "video-101-150",
-    service: "videography",
-    name: "101–150 Seconds",
-    price: "₦20,000",
-    duration: "101–150 seconds final video",
-    deliverables: "1 edited video",
-    included: ["Video edit", "Pacing and story structure", "Export ready for sharing"],
-    preparation: "Share the purpose, reference style and where the video will be used.",
-  },
-  {
-    id: "video-151-200",
-    service: "videography",
-    name: "151–200 Seconds",
-    price: "₦25,000",
-    duration: "151–200 seconds final video",
-    deliverables: "1 edited video",
-    included: ["Video edit", "Pacing and story structure", "Export ready for sharing"],
-    preparation: "Share the purpose, reference style and where the video will be used.",
-  },
-  {
-    id: "video-custom",
-    service: "videography",
-    name: "Longer or Multiple Videos",
-    price: "Custom quote",
-    duration: "Scoped after review",
-    deliverables: "Custom video deliverables",
-    included: ["Creative brief review", "Custom scope", "Personal confirmation before work begins"],
-    preparation: "Share the full video idea, length needs, platform and deadline.",
-  },
-];
-
-export const futurePricingServices = [
-  "Personal Branding",
-  "Product Photography",
-  "Events Captured Cinematically",
+  ...[
+    ["video-60", "60 seconds or less", "₦20,000", "60 seconds or less final video"],
+    ["video-90", "61–90 seconds", "₦25,000", "61–90 seconds final video"],
+    ["video-120", "91–120 seconds", "₦30,000", "91–120 seconds final video"],
+    ["video-180", "121–180 seconds", "₦40,000", "121–180 seconds final video"],
+    ["video-240", "181–240 seconds", "₦50,000", "181–240 seconds final video"],
+    ["video-custom", "Videos longer than 4 minutes", "Custom Quote", "Longer than 4 minutes"],
+  ].map(([id, name, price, duration]): PackageOption => ({
+    id: id ?? "video-custom", service: "videography", name: name ?? "Custom", price: price ?? "Custom Quote", duration: duration ?? "Agreed after review",
+    deliverables: "Final video export; exact scope agreed after brief review",
+    included: ["Creative brief and supplied footage review", "Basic motion editing within the agreed scope", "Final video export in the agreed format", motionConditions],
+    preparation: "Share your footage, desired video length, reference style, intended platform and deadline. Any typography, graphics, transitions or audio work will be agreed based on your project requirements.",
+  })),
 ];
 
 export const portfolioItems: PortfolioItem[] = services.flatMap((service, serviceIndex) =>
-  Array.from({ length: service.key === "videography" ? 3 : 4 }, (_, index) => ({
+  Array.from({ length: service.key === "videography" ? 6 : 24 }, (_, index) => ({
     id: `${service.key}-${index + 1}`,
     section: service.key,
     title: `${service.title} ${index + 1}`,

@@ -45,11 +45,15 @@ function BookingPage() {
   const uploadFiles = async (event: ChangeEvent<HTMLInputElement>) => {
     const chosen = Array.from(event.target.files ?? []).slice(0, 8);
     if (!chosen.length) return;
+    setError("");
     setUploading(true);
     const initial: StoredInspirationFile[] = chosen.map((file) => ({ name: file.name, size: file.size, type: file.type, status: "local" }));
     patch({ inspirationFiles: initial });
     const completed: StoredInspirationFile[] = [];
     for (const file of chosen) {
+      if (file.size > 20 * 1024 * 1024 || !["image/jpeg", "image/png", "image/webp", "image/gif", "application/pdf"].includes(file.type)) {
+        completed.push({ name: file.name, size: file.size, type: file.type, status: "failed", error: "Use JPG, PNG, WebP, GIF or PDF, up to 20MB." }); continue;
+      }
       const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "-");
       const path = `requests/${crypto.randomUUID()}/${safeName}`;
       const { error: uploadError } = await supabase.storage.from("booking-inspiration").upload(path, file, { upsert: false });
@@ -68,13 +72,13 @@ function BookingPage() {
     const filled = (value?: string) => !!value && value.trim().length > 0;
     const missing = [
       !draft.packageId && "session package",
-      !filled(draft.date) && "preferred date",
-      !filled(draft.time) && "preferred time",
+      draft.service !== "videography" && !filled(draft.date) && "preferred date",
+      draft.service !== "videography" && !filled(draft.time) && "preferred time",
       !filled(draft.fullName) && "full name",
       !filled(draft.email) && "email",
       !filled(draft.phone) && "phone / WhatsApp",
-      !draft.locationChoice && "location choice",
-      draft.locationChoice === "own" && !filled(draft.locationDetails) && "location details",
+      draft.service !== "videography" && !draft.locationChoice && "location choice",
+      draft.service !== "videography" && draft.locationChoice === "own" && !filled(draft.locationDetails) && "location details",
       !filled(draft.vision) && "creative vision",
     ].filter(Boolean);
     if (missing.length) {
@@ -102,40 +106,40 @@ function BookingPage() {
         <div className="space-y-16">
           <section>
             <p className="eyebrow">01 / SESSION</p><h2 className="mt-3 font-serif text-4xl">Choose your service and package.</h2>
-            <div className="mt-7 grid gap-3 md:grid-cols-2">{packages.map((pkg) => <button type="button" key={pkg.id} onClick={() => selectPackage(pkg.id)} className={`border p-5 text-left transition-colors ${draft.packageId === pkg.id ? "border-primary bg-secondary" : "border-border hover:border-primary"}`}>
+            <div className="mt-7 grid gap-3 md:grid-cols-2">{packages.map((pkg) => <Button variant="outline" type="button" key={pkg.id} onClick={() => selectPackage(pkg.id)} className={`block h-auto whitespace-normal rounded-none border p-5 text-left transition-colors ${draft.packageId === pkg.id ? "border-primary bg-secondary" : "border-border hover:border-primary"}`}>
               <span className="eyebrow">{serviceLabels[pkg.service]}</span><span className="mt-2 block font-serif text-2xl">{pkg.name}</span><span className="mt-3 block text-sm text-muted-foreground">{pkg.price} · {pkg.duration} · {pkg.deliverables}</span>
-            </button>)}</div>
-            {selected && <p className="mt-4 flex items-center gap-2 text-sm text-primary"><Check className="size-4" /> {selected.name} selected</p>}
+            </Button>)}</div>
+            {selected && <div className="mt-5 border-l border-primary pl-5"><p className="flex items-center gap-2 text-sm text-primary"><Check className="size-4" /> {selected.name} selected</p><ul className="mt-3 space-y-2 text-sm leading-7 text-muted-foreground">{selected.included.map((line) => <li key={line}>{line}</li>)}</ul></div>}
           </section>
 
-          <section>
+          {draft.service !== "videography" && <section>
             <p className="eyebrow">02 / DATE & TIME</p><h2 className="mt-3 font-serif text-4xl">Request a preferred date and time.</h2>
             <div className="mt-5 flex gap-3 border border-border bg-secondary p-5 text-sm leading-7 text-muted-foreground"><CalendarDays className="mt-1 size-5 shrink-0 text-primary" /><p><strong className="text-foreground">Calendar connection ready.</strong> Google Calendar is not connected yet, so these are preferences—not live availability. No date is presented as confirmed until it is checked personally.</p></div>
             <div className="mt-6 grid gap-5 sm:grid-cols-2"><label><span className="field-label">Preferred date</span><input className="field" type="date" value={draft.date ?? ""} onChange={(e) => patch({ date: e.target.value })} /></label><label><span className="field-label">Preferred time</span><input className="field" type="time" value={draft.time ?? ""} onChange={(e) => patch({ time: e.target.value })} /></label></div>
-          </section>
+          </section>}
 
           <section>
             <p className="eyebrow">03 / CLIENT DETAILS</p><h2 className="mt-3 font-serif text-4xl">How can we reach you?</h2>
             <div className="mt-6 grid gap-5 md:grid-cols-2"><label><span className="field-label">Full name</span><input className="field" value={draft.fullName ?? ""} onChange={(e) => patch({ fullName: e.target.value })} /></label><label><span className="field-label">Email</span><input className="field" type="email" value={draft.email ?? ""} onChange={(e) => patch({ email: e.target.value })} /></label><label><span className="field-label">Phone / WhatsApp</span><input className="field" type="tel" value={draft.phone ?? ""} onChange={(e) => patch({ phone: e.target.value })} /></label></div>
           </section>
 
-          <section>
+          {draft.service !== "videography" && <section>
             <p className="eyebrow">04 / LOCATION</p><h2 className="mt-3 font-serif text-4xl">WHERE WOULD YOU LIKE YOUR SESSION?</h2>
-            <div className="mt-6 grid gap-3 md:grid-cols-2">{[["own", "I HAVE A LOCATION IN MIND"], ["recommend", "I’D LIKE DIVINE AESTHETICS TO RECOMMEND A LOCATION"]].map(([value, label]) => <button type="button" key={value} onClick={() => patch({ locationChoice: value as "own" | "recommend" })} className={`border p-5 text-left text-sm ${draft.locationChoice === value ? "border-primary bg-secondary" : "border-border"}`}>{label}</button>)}</div>
+            <div className="mt-6 grid gap-3 md:grid-cols-2">{[["own", "I HAVE A LOCATION IN MIND"], ["recommend", "I’D LIKE DIVINE AESTHETICS TO RECOMMEND A LOCATION"]].map(([value, label]) => <Button variant="outline" type="button" key={value} onClick={() => patch({ locationChoice: value as "own" | "recommend" })} className={`h-auto whitespace-normal rounded-none border p-5 text-left text-sm ${draft.locationChoice === value ? "border-primary bg-secondary" : "border-border"}`}>{label}</Button>)}</div>
             {draft.locationChoice === "own" && <label className="mt-5 block"><span className="field-label">Location details</span><textarea className="field min-h-28" value={draft.locationDetails ?? ""} onChange={(e) => patch({ locationDetails: e.target.value })} /></label>}
-          </section>
+          </section>}
 
           <section>
-            <p className="eyebrow">05 / INSPIRATION</p><h2 className="mt-3 font-serif text-4xl">Share your visual references.</h2><p className="mt-4 body-large">Have references, screenshots or moodboards? Share them so we can understand the visual direction you’re drawn to.</p>
-            <label className="mt-6 flex min-h-40 cursor-pointer flex-col items-center justify-center border border-dashed border-primary p-7 text-center"><CloudUpload className="size-7 text-primary" /><span className="mt-3 text-sm font-medium">Select images or files</span><span className="mt-1 text-xs text-muted-foreground">Up to 8 files, 20MB each</span><input className="sr-only" type="file" accept="image/*,.pdf" multiple onChange={uploadFiles} /></label>
+            <p className="eyebrow">05 / INSPIRATION — OPTIONAL</p><h2 className="mt-3 font-serif text-4xl">Share your visual references (optional).</h2><p className="mt-4 body-large">Have references, screenshots or moodboards? Share them so we can understand the visual direction you’re drawn to.</p>
+            <label className="mt-6 flex min-h-40 cursor-pointer flex-col items-center justify-center border border-dashed border-primary p-7 text-center"><CloudUpload className="size-7 text-primary" /><span className="mt-3 text-sm font-medium">Select images or files</span><span className="mt-1 text-xs text-muted-foreground">Optional · Up to 8 JPG, PNG, WebP, GIF or PDF files, 20MB each</span><input className="sr-only" type="file" accept="image/*,.pdf" multiple onChange={uploadFiles} /></label>
             {uploading && <p className="mt-4 text-sm">Storing selected files…</p>}
-            {!!draft.inspirationFiles?.length && <div className="mt-4 space-y-2">{draft.inspirationFiles.map((file, index) => <div key={`${file.name}-${index}`} className="flex items-center justify-between gap-4 border border-border p-3 text-sm"><span className="flex min-w-0 items-center gap-2"><FileImage className="size-4 shrink-0" /><span className="truncate">{file.name}</span></span><span className={file.status === "stored" ? "text-primary" : file.status === "failed" ? "text-destructive" : "text-muted-foreground"}>{file.status === "stored" ? "Stored" : file.status === "failed" ? "Not stored" : "Selected locally"}</span></div>)}</div>}
+            {!!draft.inspirationFiles?.length && <div className="mt-4 space-y-2">{draft.inspirationFiles.map((file, index) => <div key={`${file.name}-${index}`} className="flex items-center justify-between gap-4 border border-border p-3 text-sm"><span className="flex min-w-0 items-center gap-2"><FileImage className="size-4 shrink-0" /><span className="truncate">{file.name}</span></span><span className={file.status === "stored" ? "text-primary" : file.status === "failed" ? "text-destructive" : "text-muted-foreground"}>{file.status === "stored" ? (file.shareUrl ? "Stored · secure link ready" : "Stored · link unavailable") : file.status === "failed" ? "Not stored" : "Selected locally"}</span></div>)}</div>}
             <label className="mt-5 block"><span className="field-label">Inspiration notes</span><textarea className="field min-h-28" value={draft.inspirationNotes ?? ""} onChange={(e) => patch({ inspirationNotes: e.target.value })} /></label>
           </section>
 
           <section>
             <p className="eyebrow">06 / YOUR VISION</p><h2 className="mt-3 font-serif text-4xl">WHAT WOULD YOU LIKE YOUR VISUALS TO COMMUNICATE?</h2><p className="mt-4 body-large">Tell us about your idea, story, aesthetic, mood or anything you want us to understand before your session.</p>
-            <textarea className="field mt-6 min-h-56 text-lg leading-8" value={draft.vision ?? ""} onChange={(e) => patch({ vision: e.target.value })} />
+            <textarea aria-label="Creative vision" className="field mt-6 min-h-56 text-lg leading-8" value={draft.vision ?? ""} onChange={(e) => patch({ vision: e.target.value })} />
             <label className="mt-5 block"><span className="field-label">Relevant notes</span><textarea className="field min-h-28" value={draft.relevantNotes ?? ""} onChange={(e) => patch({ relevantNotes: e.target.value })} /></label>
           </section>
 

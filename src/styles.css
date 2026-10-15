@@ -174,3 +174,14 @@
   .section-shell { padding: 8rem 2rem; }
   .page-intro { padding: 10rem 2rem 7rem; }
 }
+
+/* Natural image proportions keep faces and the complete photographs visible. */
+.portfolio-grid { columns: 3; column-gap: 1.25rem; }
+.portfolio-entry { break-inside: avoid; margin-bottom: 1.5rem; }
+.portfolio-slot { min-height: 0; width: 100%; }
+.portfolio-portrait.portfolio-slot { aspect-ratio: 3 / 4; }
+.portfolio-landscape.portfolio-slot { aspect-ratio: 4 / 3; }
+.portfolio-square.portfolio-slot { aspect-ratio: 1; }
+@media (max-width: 1023px) { .portfolio-grid { columns: 2; } }
+@media (max-width: 639px) { .portfolio-grid { columns: 1; } .page-title { font-size: 3rem; overflow-wrap: anywhere; } .display-heading { font-size: 2.5rem; overflow-wrap: anywhere; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }

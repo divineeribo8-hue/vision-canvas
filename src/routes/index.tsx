@@ -15,7 +15,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Divine Aesthetics Media Agency — From Vision to Visual" },
-      { name: "description", content: "Intentional photography, videography and visual storytelling in Nigeria." },
+      { name: "description", content: "Smartphone Portrait Photography and Basic Motion Video Editing in Nigeria." },
       { property: "og:title", content: "Divine Aesthetics Media Agency" },
       { property: "og:description", content: "Your vision deserves to be seen through intentional visual storytelling." },
       { property: "og:type", content: "website" },
@@ -39,7 +39,7 @@ function HomePage() {
             </h1>
             <div className="mt-10 grid gap-8 border-t border-primary-foreground/25 pt-6 lg:grid-cols-[1fr_auto] lg:items-end">
               <p className="max-w-2xl text-base leading-8 text-primary-foreground/78 lg:text-lg">
-                Divine Aesthetics Media Agency creates intentional photography, videography and visual stories that translate vision, identity and feeling into imagery.
+                Divine Aesthetics Media Agency creates intentional smartphone portraits and basic motion video edits that translate vision, identity and feeling into imagery.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Button asChild variant="ivory" size="lg"><Link to="/the-work">EXPLORE THE WORK</Link></Button>
@@ -67,18 +67,16 @@ function HomePage() {
                 <p className="eyebrow">SELECTED WORK</p>
                 <h2 className="mt-4 display-heading">A place for the work to speak.</h2>
               </div>
-              <p className="max-w-md text-sm leading-7 text-muted-foreground">
-                These are development placeholders. Your own photography and films can replace each one without changing the editorial layout.
-              </p>
+
             </div>
-            <div className="mt-12 grid auto-rows-[18rem] gap-4 md:grid-cols-3">
+            <div className="portfolio-grid mt-12">
               {selectedWork.map((item, index) => (
                 <PortfolioVisual
                   key={item.id}
                   item={published[index]}
                   placeholderLabel={item.title}
                   placeholderType={item.type}
-                  className={index === 0 || index === 7 ? "md:col-span-2 md:row-span-2" : ""}
+                  className={`portfolio-entry ${item.orientation === "landscape" ? "portfolio-landscape" : item.orientation === "square" ? "portfolio-square" : "portfolio-portrait"}`}
                 />
               ))}
             </div>
@@ -109,7 +107,7 @@ function HomePage() {
             <div className="grid gap-10 md:grid-cols-2">
               <blockquote className="border-l border-primary pl-7">
                 <p className="font-serif text-3xl leading-snug">“The process felt thoughtful from the first conversation. I felt seen, not styled into someone else.”</p>
-                <footer className="mt-5 text-xs uppercase tracking-[0.2em] text-muted-foreground">Portrait client</footer>
+                <footer className="mt-5 text-xs uppercase tracking-[0.2em] text-muted-foreground">Smartphone portrait client</footer>
               </blockquote>
               <blockquote className="border-l border-primary pl-7">
                 <p className="font-serif text-3xl leading-snug">“The final visuals carried the exact feeling I had struggled to explain.”</p>

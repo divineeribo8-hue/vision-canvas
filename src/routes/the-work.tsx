@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 
 import { PageShell } from "@/components/SiteChrome";
+import { PortfolioEditor } from "@/components/PortfolioEditor";
 import { PortfolioVisual } from "@/components/PortfolioVisual";
 import { Button } from "@/components/ui/button";
 import { portfolioItems, services } from "@/lib/divine-data";
@@ -13,7 +14,7 @@ export const Route = createFileRoute("/the-work")({
   loader: ({ context }) => context.queryClient.ensureQueryData(portfolioQuery),
   head: () => ({ meta: [
     { title: "The Work — Divine Aesthetics Media Agency" },
-    { name: "description", content: "Explore portraits, personal branding, products, concepts, cinematic events and videography." },
+    { name: "description", content: "Explore Smartphone Portrait Photography and Basic Motion Video Editing by Divine Aesthetics." },
     { property: "og:title", content: "The Work — Divine Aesthetics" },
     { property: "og:description", content: "Experience the art of visual storytelling." },
     { property: "og:type", content: "website" },
@@ -34,10 +35,13 @@ function WorkPage() {
           <div className="mt-9 border-l border-primary pl-5 text-sm leading-7 text-muted-foreground">
             Frames marked as placeholders are reserved for upcoming work and are not presented as completed Divine Aesthetics work.
           </div>
+          <PortfolioEditor items={published} />
         </header>
 
         {services.map((service, serviceIndex) => {
-          const items = portfolioItems.filter((item) => item.section === service.key);
+          const media = published.filter((item) => item.section === service.key);
+          const slots = portfolioItems.filter((item) => item.section === service.key);
+          const items = Array.from({ length: Math.max(slots.length, media.length) }, (_, index) => ({ slot: slots[index], media: media[index] }));
           return (
             <section key={service.key} className={serviceIndex % 2 ? "border-y border-border bg-secondary" : ""}>
               <div className="section-shell">
@@ -48,14 +52,14 @@ function WorkPage() {
                     <p className="mt-5 max-w-2xl body-large">{service.description}</p>
                   </div>
                 </div>
-                <div className="mt-12 grid auto-rows-[20rem] gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {items.map((item, index) => (
+                <div className="portfolio-grid mt-12">
+                  {items.map(({ slot, media: project }, index) => (
                     <PortfolioVisual
-                      key={item.id}
-                      item={published.filter((media) => media.section === service.key)[index]}
-                      placeholderLabel={item.title}
-                      placeholderType={item.type}
-                      className={index === 0 ? "lg:col-span-2 lg:row-span-2" : ""}
+                      key={project?.id ?? slot?.id ?? index}
+                      item={project}
+                      placeholderLabel="Awaiting new work"
+                      placeholderType={service.key === "videography" ? "video" : "image"}
+                      className={`portfolio-entry ${slot?.orientation === "landscape" ? "portfolio-landscape" : slot?.orientation === "square" ? "portfolio-square" : "portfolio-portrait"}`}
                     />
                   ))}
                 </div>
