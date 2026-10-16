@@ -3,6 +3,16 @@ import "./lib/error-capture";
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 
+// Hosts other than Lovable Cloud (e.g. Netlify) don't load .env into the server
+// runtime, so fall back to the public VITE_* values Vite inlines at build time.
+// Values configured in the host's environment still take precedence.
+for (const [name, value] of [
+  ["SUPABASE_URL", import.meta.env["VITE_SUPABASE_URL"]],
+  ["SUPABASE_PUBLISHABLE_KEY", import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"]],
+] as const) {
+  if (!process.env[name] && value) process.env[name] = value;
+}
+
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
 };
