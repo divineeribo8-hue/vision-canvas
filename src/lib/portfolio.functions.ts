@@ -28,9 +28,16 @@ export const getPublishedPortfolio = createServerFn({ method: "GET" }).handler(a
   const signed = await Promise.all((data ?? []).map(async (item) => {
     let mediaUrl = item.media_path;
     if (!mediaUrl.startsWith("/__l5e/assets-v1/")) {
-      const { data: signedData } = await supabaseAdmin.storage.from("portfolio-media").createSignedUrl(item.media_path, 3600);
-      if (!signedData?.signedUrl) return null;
-      mediaUrl = signedData.signedUrl;
+      // Signing needs the service role key; skip the item rather than failing every page that lists work.
+      let signedUrl: string | undefined;
+      try {
+        const { data: signedData } = await supabaseAdmin.storage.from("portfolio-media").createSignedUrl(item.media_path, 3600);
+        signedUrl = signedData?.signedUrl;
+      } catch (signError) {
+        console.error(signError);
+      }
+      if (!signedUrl) return null;
+      mediaUrl = signedUrl;
     }
     return { id: item.id, section: item.section, title: item.title, mediaType: item.media_type as "image" | "video", orientation: item.orientation as "portrait" | "landscape" | "square", mediaUrl } satisfies PublishedPortfolioItem;
   }));
