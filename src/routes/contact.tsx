@@ -19,7 +19,7 @@ export const Route = createFileRoute("/contact")({
 const methods = [
   { icon: MessageCircle, title: "WHATSAPP", text: "For session enquiries and direct conversation.", href: "https://wa.me/2348162011902" },
   { icon: Mail, title: "EMAIL", text: "For detailed briefs, collaborations and commissions.", href: "mailto:divineeribo8@gmail.com" },
-  { icon: Instagram, title: "INSTAGRAM", text: "Follow the evolving visual archive.", href: "https://instagram.com" },
+  { icon: Instagram, title: "INSTAGRAM", text: "Follow the evolving visual archive.", href: "https://instagram.com/divineaesthetics.media" },
 ];
 
 function ContactPage() {
