@@ -42,7 +42,10 @@ export function readBookingDraft(): BookingDraft {
     const parsed = JSON.parse(raw) as BookingDraft;
     if (!parsed || typeof parsed !== "object") return {};
     const selected = findPackage(parsed.packageId);
-    if (!selected) return { ...parsed, service: undefined, packageId: undefined, packageName: undefined, price: undefined, duration: undefined, deliverables: undefined };
+    if (!selected) {
+      const { service, packageId, packageName, price, duration, deliverables, ...details } = parsed;
+      return details;
+    }
     return { ...parsed, service: selected.service, packageName: selected.name, price: selected.price, duration: selected.duration, deliverables: selected.deliverables };
   } catch {
     return {};
@@ -121,4 +124,9 @@ export function buildBookingMessage(draft: BookingDraft) {
     "",
     "I look forward to creating with Divine Aesthetics.",
   ].join("\n");
+}
+
+export function isInquiryComplete(draft: BookingDraft) {
+  return !!(findPackage(draft.packageId) && draft.fullName?.trim() && draft.email?.trim() && draft.phone?.trim() && draft.vision?.trim() &&
+    (draft.service === "videography" || (draft.date && draft.time && draft.locationChoice && (draft.locationChoice !== "own" || draft.locationDetails?.trim()))));
 }
