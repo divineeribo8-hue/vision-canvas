@@ -52,7 +52,7 @@ export const packages: PackageOption[] = [
     id: "portrait-standard",
     service: "portraits",
     name: "Standard",
-    price: "₦20,000",
+    price: "₦23,000",
     duration: "30–45 minutes",
     deliverables: "5 edited images",
     included: portraitIncludes,
@@ -62,7 +62,7 @@ export const packages: PackageOption[] = [
     id: "portrait-plus",
     service: "portraits",
     name: "Plus",
-    price: "₦25,000",
+    price: "₦30,000",
     duration: "45–60 minutes",
     deliverables: "7 edited images",
     included: portraitIncludes,
@@ -72,7 +72,7 @@ export const packages: PackageOption[] = [
     id: "portrait-premium",
     service: "portraits",
     name: "Premium",
-    price: "₦30,000",
+    price: "₦36,000",
     duration: "Up to 2 hours",
     deliverables: "10 edited images",
     included: portraitIncludes,
@@ -94,7 +94,7 @@ export const packages: PackageOption[] = [
 ];
 
 export const portfolioItems: PortfolioItem[] = services.flatMap((service, serviceIndex) =>
-  Array.from({ length: service.key === "videography" ? 6 : 24 }, (_, index) => ({
+  Array.from({ length: service.key === "videography" ? 3 : 24 }, (_, index) => ({
     id: `${service.key}-${index + 1}`,
     section: service.key,
     title: `${service.title} ${index + 1}`,
