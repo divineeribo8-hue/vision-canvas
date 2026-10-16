@@ -1,12 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
 import { Copy, Mail, MessageCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { PageShell } from "@/components/SiteChrome";
 import { Button } from "@/components/ui/button";
-import { submitBookingRequest } from "@/lib/booking.functions";
-import { buildBookingMessage, readBookingDraft, updateBookingDraft, type BookingDraft } from "@/lib/booking-storage";
+import { buildBookingMessage, readBookingDraft, isInquiryComplete, type BookingDraft } from "@/lib/booking-storage";
 import { serviceLabels } from "@/lib/divine-data";
 
 export const Route = createFileRoute("/booking-review")({
@@ -25,23 +23,14 @@ function ReviewPage() {
   const [draft, setDraft] = useState<BookingDraft>({});
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState("");
-  const submitRequest = useServerFn(submitBookingRequest);
   useEffect(() => setDraft(readBookingDraft()), []);
 
-  if (!draft.packageId) return <PageShell><main className="page-intro"><h1 className="page-title">REVIEW YOUR SESSION.</h1><p className="mt-7 body-large">There is no booking draft to review yet.</p><Button asChild className="mt-6"><Link to="/booking">START BOOKING</Link></Button></main></PageShell>;
+  if (!isInquiryComplete(draft)) return <PageShell><main className="page-intro"><h1 className="page-title">REVIEW YOUR SESSION.</h1><p className="mt-7 body-large">There is no booking draft to review yet.</p><Button asChild className="mt-6"><Link to="/booking">START BOOKING</Link></Button></main></PageShell>;
 
   const message = buildBookingMessage(draft);
   const sessionLabel = draft.service ? serviceLabels[draft.service] : "Session";
   const whatsappUrl = `https://wa.me/2348162011902?text=${encodeURIComponent(message)}`;
   const gmailUrl = `mailto:divineeribo8@gmail.com?subject=${encodeURIComponent(`Divine Aesthetics Session Inquiry — ${sessionLabel}`)}&body=${encodeURIComponent(message)}`;
-
-  const record = async (method: "whatsapp" | "email") => {
-    try {
-      await submitRequest({ data: { service: draft.service!, packageName: draft.packageName!, price: draft.price!, duration: draft.duration!, deliverables: draft.deliverables!, preferredDate: draft.date!, preferredTime: draft.time!, fullName: draft.fullName!, email: draft.email!, phone: draft.phone!, locationChoice: draft.locationChoice!, locationDetails: draft.locationDetails, inspirationNotes: draft.inspirationNotes, inspirationFiles: draft.inspirationFiles ?? [], vision: draft.vision!, relevantNotes: draft.relevantNotes, contactMethod: method } });
-    } catch { /* sending still works even if saving fails */ }
-    updateBookingDraft({ contactMethod: method, requestSent: true });
-    setDraft(readBookingDraft());
-  };
 
   const copyAll = async () => {
     setError("");
@@ -55,7 +44,7 @@ function ReviewPage() {
   const groups: [string, [string, string | undefined][]][] = [
     ["CLIENT INFORMATION", [["Name", draft.fullName], ["Phone / WhatsApp", draft.phone], ["Email", draft.email]]],
     ["SESSION", [["Session", sessionLabel], ["Package", draft.packageName], ["Price", draft.price], ["Duration", draft.duration], ["Deliverables", draft.deliverables]]],
-    ["SESSION DETAILS", [["Preferred date", draft.date], ["Preferred time", draft.time], ["Location", draft.locationChoice === "recommend" ? "Please recommend a location" : draft.locationDetails]]],
+    ["SESSION DETAILS", [["Preferred date", draft.service === "videography" ? "Not applicable — editing project" : draft.date], ["Preferred time", draft.service === "videography" ? "Not applicable — editing project" : draft.time], ["Location", draft.service === "videography" ? "Not applicable — editing project" : draft.locationChoice === "recommend" ? "Please recommend a location" : draft.locationDetails]]],
     ["CREATIVE DIRECTION", [["Creative vision", draft.vision], ["Additional notes", draft.relevantNotes]]],
   ];
 
@@ -70,7 +59,7 @@ function ReviewPage() {
       <section className="px-6 py-6">
         <p className="eyebrow text-primary">INSPIRATION</p>
         <p className="mt-3 text-sm leading-6">{draft.inspirationNotes || "No inspiration notes provided."}</p>
-        <div className="mt-3 space-y-2">{draft.inspirationFiles?.length ? draft.inspirationFiles.map((file) => <p key={file.name} className="text-sm">{file.status === "stored" && file.shareUrl ? <a href={file.shareUrl} target="_blank" rel="noopener noreferrer" className="underline decoration-primary underline-offset-4">{file.name}</a> : file.name} — <span className={file.status === "stored" ? "text-primary" : "text-destructive"}>{file.status === "stored" ? "uploaded (secure link)" : "not uploaded"}</span></p>) : <p className="text-sm text-muted-foreground">No files attached.</p>}</div>
+        <div className="mt-3 space-y-2">{draft.inspirationFiles?.length ? draft.inspirationFiles.map((file) => <p key={file.name} className="text-sm">{file.status === "stored" && file.shareUrl ? <a href={file.shareUrl} target="_blank" rel="noopener noreferrer" className="underline decoration-primary underline-offset-4">{file.name}</a> : file.name} — <span className={file.status === "stored" ? "text-primary" : "text-destructive"}>{file.status === "stored" ? (file.shareUrl ? "uploaded (secure link)" : "stored; link unavailable") : "not uploaded"}</span></p>) : <p className="text-sm text-muted-foreground">No files attached.</p>}</div>
       </section>
     </div>
 
@@ -79,10 +68,10 @@ function ReviewPage() {
     <section className="mt-10">
       <p className="eyebrow">SEND YOUR INQUIRY</p>
       <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">Copy your full inquiry first, then choose WhatsApp or Gmail. If the message doesn't appear filled in, just paste it.</p>
-      <div className="mt-6 grid gap-3 md:grid-cols-3">
+      <div className="mt-6 grid gap-3 xl:grid-cols-3">
         <Button type="button" variant="editorial" size="lg" onClick={() => void copyAll()}><Copy className="mr-2 size-4" />COPY FULL INQUIRY</Button>
-        <Button asChild variant="outlineEditorial" size="lg"><a href={whatsappUrl} target="_blank" rel="noopener noreferrer" onClick={() => void record("whatsapp")}><MessageCircle className="mr-2 size-4" />SEND VIA WHATSAPP</a></Button>
-        <Button asChild variant="outlineEditorial" size="lg"><a href={gmailUrl} target="_blank" rel="noopener noreferrer" onClick={() => void record("email")}><Mail className="mr-2 size-4" />SEND VIA GMAIL</a></Button>
+        <Button asChild variant="outlineEditorial" size="lg"><a href={whatsappUrl} target="_blank" rel="noopener noreferrer"><MessageCircle className="mr-2 size-4" />SEND VIA WHATSAPP</a></Button>
+        <Button asChild variant="outlineEditorial" size="lg"><a href={gmailUrl} target="_blank" rel="noopener noreferrer"><Mail className="mr-2 size-4" />SEND VIA GMAIL</a></Button>
       </div>
       {copied && <p role="status" className="mt-4 text-sm text-primary">Inquiry copied to clipboard.</p>}
       {error && <p role="alert" className="mt-4 text-sm text-destructive">{error}</p>}
@@ -90,6 +79,6 @@ function ReviewPage() {
       <pre className="mt-6 max-h-72 overflow-auto whitespace-pre-wrap border border-border bg-background p-4 text-xs leading-6 text-muted-foreground">{message}</pre>
     </section>
 
-    <div className="mt-10 flex flex-wrap gap-4"><Button asChild variant="text"><Link to="/booking">EDIT DETAILS</Link></Button>{draft.requestSent && <Button asChild variant="outlineEditorial"><Link to="/booking-request-received">I HAVE SENT MY MESSAGE</Link></Button>}</div>
+    <div className="mt-10 flex flex-wrap gap-4"><Button asChild variant="text"><Link to="/booking">EDIT DETAILS</Link></Button><Button asChild variant="outlineEditorial"><Link to="/contact-method">PROCEED WITH YOUR SESSION</Link></Button></div>
   </main></PageShell>;
 }

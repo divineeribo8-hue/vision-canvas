@@ -9,7 +9,8 @@
 - [x] Generate WhatsApp and email messages automatically from the client’s booking details.
 - [x] Clearly distinguish booking request sent from booking confirmed.
 - [x] Set the supplied WhatsApp and Gmail contact details.
-- [ ] Rename portraits without changing packages and replace video pricing; show only two services.
-- [ ] Expand the mixed-aspect portfolio, clear image viewing, and simple secure media maintenance.
-- [ ] Keep optional inspiration and service-appropriate inquiry fields; verify review, copy and send options.
-- [ ] Verify the website and apply the required package security update.
+- [x] Rename portraits without changing packages and replace video pricing; show only two services.
+- [x] Expand the mixed-aspect portfolio, clear image viewing, and simple secure media maintenance.
+- [x] Keep optional inspiration and service-appropriate inquiry fields; verify review, copy and send options.
+- [x] Verify the website and apply the required package security update.
+- [ ] Verify owner portfolio add/replace/remove end-to-end — blocked until the studio owner first signs in with Google; no auth users currently exist.
