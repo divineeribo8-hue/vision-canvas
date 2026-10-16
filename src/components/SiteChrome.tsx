@@ -85,7 +85,7 @@ export function Footer() {
           <div>
             <p className="footer-label">Social</p>
             <div className="mt-4 grid gap-3">
-              <a className="footer-link" href="https://instagram.com" target="_blank" rel="noreferrer">
+              <a className="footer-link" href="https://instagram.com/divineaesthetics.media" target="_blank" rel="noreferrer">
                 Instagram
               </a>
               <a className="footer-link" href="mailto:divineeribo8@gmail.com">
