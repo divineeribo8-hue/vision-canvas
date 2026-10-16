@@ -94,7 +94,7 @@ export const packages: PackageOption[] = [
 ];
 
 export const portfolioItems: PortfolioItem[] = services.flatMap((service, serviceIndex) =>
-  Array.from({ length: service.key === "videography" ? 3 : 24 }, (_, index) => ({
+  Array.from({ length: service.key === "videography" ? 3 : 14 }, (_, index) => ({
     id: `${service.key}-${index + 1}`,
     section: service.key,
     title: `${service.title} ${index + 1}`,
